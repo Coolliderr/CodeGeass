@@ -1,3 +1,5 @@
+# 合约地址
+https://polygonscan.com/address/0xea5c25f46f099c9f8dd2d427f21b02ffc5152887#code  
 # NFT Batch Minting API
 
 这是一个基于 Node.js + Express + Ethers.js 的后端服务，用于后台调用合约。其中函数 `adminBatchMintAuto` 批量铸造 NFT，函数 `adminTransfer` 转移 NFT。
