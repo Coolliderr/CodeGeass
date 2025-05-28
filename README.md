@@ -21,7 +21,7 @@
 sudo apt update
 sudo apt install nodejs npm -y
 sudo npm install -g pm2
-
+```
 ---
 
 ## 🚀 功能特色
