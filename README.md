@@ -21,3 +21,12 @@
 sudo apt update
 sudo apt install nodejs npm -y
 sudo npm install -g pm2
+
+---
+
+## 🚀 功能特色
+
+- ✅ 支持批量 mint NFT 到指定地址
+- ✅ 后端集成 Ethers.js，自动签名并发送交易
+- ✅ 支持 API token 认证，提升安全性
+- ✅ 使用 pm2 实现后台守护、开机自启
