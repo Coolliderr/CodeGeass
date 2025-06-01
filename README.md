@@ -70,11 +70,15 @@ curl -X POST http://<your-ip>:3000/api/mint \
   -H "Content-Type: application/json" \
   -H "x-api-token: abc123456" \
   -d '{
-    "to": "0xabc123...", //商户地址，用于接收铸造的NFT
-    "uri": "https://example.com/meta.json", //图片链接，可以是OSS链接
-    "series": "S1", //系列
-    "publisher": "MyStudio", //出版商
-    "quantity": 5 //铸造数量
+    "to": "0xabc123...",                      // 商户地址，用于接收铸造的NFT
+    "uri": "https://example.com/meta.json",   // 图片链接，通常是统一URI
+    "dexcode": "S1-001",                      // 图鉴编码
+    "dexname": "敦煌飞天",                    // 图鉴名称
+    "series": "S1",                            // 所属系列
+    "publisher": "MyStudio",                  // 出版社/发行方
+    "copyright": "© 2024 MyStudio",           // 著作权标记
+    "platform": "MyPlatform",                 // 发售平台名称
+    "quantity": 5                             // 铸造数量
 }'
 ```
 ```bash
