@@ -106,3 +106,128 @@ curl -X POST http://<your-ip>:3000/api/transfer \
   "txHash":"0x94fe7fafbbbc50dc4e8cbbbb1d13ef2273c1585dcf6607bdb8d71a788a3e9780"
 }
 ```
+3✅、管理员给指定编号的NFT上传数据  
+当商户的NFT卖出转账给用户后，后台调用此API，把一些藏品信息上传  
+```bash
+curl -X POST http://<your-ip>:3000/api/set-collectibles \
+  -H "Content-Type: application/json" \
+  -H "x-api-token: abc123456" \
+  -d '{
+    "tokenId": 1234,                          // 要设置信息的 NFT tokenId
+    "hash": "QmXYZabc...123",                // 藏品哈希值（如 IPFS CID 或 SHA256）
+    "code": "S1-001-0123"                    // 藏品编码（一般是图鉴编码 + 序号）
+}'
+```
+```bash
+{
+  "success":true,
+  "txHash":"0x94fe7fafbbbc50dc4e8cbbbb1d13ef2273c1585dcf6607bdb8d71a788a3e9780"
+}
+```
+4✅、/api/collectible 获取单个藏品信息
+```bash
+curl -X GET "http://<your-ip>:3000/api/collectible?tokenId=2" \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "tokenId":"2",
+  "name":"大圣归来",
+  "hash":"0xbdbcb710f020b7c79623bacd2a4fccc54f2db607823d7cd65a501e6493d50054",
+  "code":"S1-001-0002",
+  "dexId":"0",
+  "series":"S1",
+  "url":"https://himailx.oss-cn-hongkong.aliyuncs.com/%E5%9B%BE%E7%89%87/4943.png",
+  "author":"0xaf07DCE2B9A6E056AB9C9E6B85723c064b7D7959",
+  "publisher":"米哈游",
+  "copyright":"© 2024 Wangyuan Studio 版权所有",
+  "platform":"鲸探",
+  "owner":"0xaf07DCE2B9A6E056AB9C9E6B85723c064b7D7959"
+}
+```
+5✅、/api/dex 获取图鉴信息
+```bash
+curl -X GET "http://<your-ip>:3000/api/dex?dexId=0" \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "dexId":"0",
+  "dexcode":"S1-001",
+  "dexname":"大圣归来",
+  "series":"S1",
+  "baseURI":"https://himailx.oss-cn-hongkong.aliyuncs.com/%E5%9B%BE%E7%89%87/4943.png",
+  "author":"0xaf07DCE2B9A6E056AB9C9E6B85723c064b7D7959",
+  "copyright":"© 2024 Wangyuan Studio 版权所有",
+  "publisher":"米哈游",
+  "platform":"鲸探",
+  "amount":"100",
+  "startId":"0",
+  "endId":"99",
+  "createdAt":"1748735032"
+}
+```
+6✅、/api/token-dex 获取 tokenId 所属图鉴编号
+```bash
+curl -X GET "http://<your-ip>:3000/api/token-dex?tokenId=1234" \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "tokenId":"8",
+  "dexId":"0"
+}
+```
+7✅、/api/balance 查询某地址的持仓数量
+```bash
+curl -X GET "http://<your-ip>:3000/api/balance?address=0xabc123..." \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "address":"0x4FDC3F3F097678bee02dCeA78c8841fb54355BCa",
+  "balance":"1"
+}
+```
+8✅、/api/owner 查询某 tokenId 拥有者
+```bash
+curl -X GET "http://<your-ip>:3000/api/owner?tokenId=1234" \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "tokenId":"8",
+  "owner":"0xaf07DCE2B9A6E056AB9C9E6B85723c064b7D7959"
+}
+```
+9✅、/api/total-supply 查询当前已铸造的总 NFT 数量
+```bash
+curl -X GET "http://<your-ip>:3000/api/total-supply" \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "totalSupply":"110"
+}
+```
+10✅、/api/current-dex-id 查询图鉴编号计数器（用于查询合约中总共创建了多少个图鉴）
+```bash
+curl -X GET "http://<your-ip>:3000/api/current-dex-id" \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "currentDexId":"2"
+}
+```
+11✅、/api/generate-wallet 生成新以太坊地址 & 私钥
+```bash
+curl -X GET "http://<your-ip>:3000/api/generate-wallet" \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "address":"0x13515299fc411A4a40d20d3539a4186E030d6703",
+  "privateKey":"0xc980d22f4eff8d1762851f02a46dadf66b8cc511385fa47266c9d3ff5e114dcb"
+}
+```
