@@ -61,7 +61,7 @@ sudo ufw allow 3000
 
 ## 📦 调用API
 
-x-api-token是访问权限token，在.env文件中修改
+x-api-token是访问权限token，在.env文件中修改，`<your-ip>`换成你自己的服务器IP 或用测试IP：8.217.239.202
 
 1✅、管理员给指定地址批量MINT NFT  
 当商户需要发行NFT的时候，后台调用此API，并根据回调结果执行小程序的其它程序  
