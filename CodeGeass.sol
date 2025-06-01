@@ -1,9 +1,5 @@
-/**
- *Submitted for verification at polygonscan.com on 2025-05-25
-*/
-
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
@@ -673,31 +669,66 @@ contract ERC721A is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable
     ) internal virtual {}
 }
 
-/* 合约部署主体 */
+// 合约部署主体 
 contract CodeGeass is Ownable, ERC721A, ReentrancyGuard {
     using Strings for uint256;
 
     // 图鉴结构体
     struct DexInfo {
-        uint256 dexId;         // 图鉴编号（等于当前图鉴ID）
-        uint256 amount;        // 该图鉴实际发行数量
-        string baseURI;        // 图鉴统一图片 URI
-        address author;        // 商户地址
-        string series;         // 系列名（如：S1、Limited、CodeGeass 等）
-        string publisher;      // 发行商名称
-        uint256 createdAt;     // 创建时间戳
+        uint256 dexId;         // 图鉴编号
+        string dexcode;        // 图鉴编码（如：S1-001）
+        string dexname;        // 图鉴名称（如：敦煌飞天）
+        string series;         // 所属系列（如：S1、Limited、CodeGeass 等）
+        string baseURI;        // 图鉴统一图片URI
+        address author;        // 艺术家
+        string copyright;      // 著作权标记（如“© 2024 Wangyuan Studio 版权所有”）
+        string publisher;      // 发行方（如 “鲸探官方”）
+        string platform;       // 发售平台（如 “鲸探”）
+        uint256 amount;        // 发行总量
+        uint256 startId;       // 起始tokenId
+        uint256 endId;         // 结束tokenId
+        uint256 createdAt;     // 创建时间
+    }
+
+    // 藏品结构体
+    struct CollectibleInfo {
+        string name;         // 藏品名称（如《敦煌飞天 No.88》）
+        string hash;         // 哈希值（如 IPFS Hash 或 SHA256）
+        string code;         // 藏品编码（如：S1-001-0088）
+        uint256 dexId;       // 所属图鉴编号
+        string series;       // 所属系列
+        string url;          // 藏品图像链接
+        address author;      // 创作者地址
+        string publisher;    // 发行方
+        string copyright;    // 著作权标记
+        string platform;     // 发售平台（如“鲸探”）
+        address owner;       // 当前收藏者
+    }
+
+    // 输入结构体
+    struct DexInput {
+        string uri;
+        string dexcode;
+        string dexname;
+        string series;
+        string publisher;
+        string copyright;
+        string platform;
+        uint256 quantity;
     }
 
     string private _baseTokenURI;
     
     uint256 public constant MAX_BATCH_SIZE = 5000; // 单次铸造上限张数
     uint256 public constant COLLECTION_SIZE = 100000000000000000; // 总供应上限
-    uint256 public currentDexId;              // 当前图鉴编号（自动增长）
-    uint256[] public dexStartIds; // 每个图鉴的起始 tokenId
+    uint256 public currentDexId;              // 当前藏品编号（自动增长）
+    uint256[] public dexStartIds; // 每个藏品的起始 tokenId
     
     mapping(uint256 => DexInfo) public dexInfoMap;      // 图鉴
+    mapping(uint256 => CollectibleInfo) public collectibleInfoMap;     // 藏品结构体
 
     event MintedNewDex(address indexed to, uint256 dexId, uint256 quantity); // 铸造新图鉴
+    event TransferNFT(address indexed from, address indexed to, uint256 indexed tokenId); // 藏品转移记录
 
     constructor() ERC721A("CodeGeass", "CGS", MAX_BATCH_SIZE, COLLECTION_SIZE) {}
 
@@ -716,33 +747,33 @@ contract CodeGeass is Ownable, ERC721A, ReentrancyGuard {
     }
 
     // 自动发行新图鉴
-    function adminBatchMintAuto(
-        address to,
-        string calldata uri,
-        string calldata series,
-        string calldata publisher,
-        uint256 quantity
-    ) external onlyOwner {
-        require(bytes(uri).length > 0, "URI required");
-        require(quantity > 0 && quantity <= MAX_BATCH_SIZE, "Invalid quantity");
+    function adminBatchMintAuto( address to, DexInput calldata input ) external onlyOwner {
+        require(bytes(input.uri).length > 0, "URI required");
+        require(input.quantity > 0 && input.quantity <= MAX_BATCH_SIZE, "Invalid quantity");
 
         uint256 startTokenId = totalSupply();
         
         // 记录图鉴信息
         dexInfoMap[currentDexId] = DexInfo({
             dexId: currentDexId,
-            amount: quantity,
-            baseURI: uri,
+            dexcode: input.dexcode,
+            dexname: input.dexname,
+            series: input.series,
+            baseURI: input.uri,
             author: to,
-            series: series,
-            publisher: publisher,
+            copyright: input.copyright,
+            publisher: input.publisher,
+            platform: input.platform,
+            amount: input.quantity,
+            startId: startTokenId,
+            endId: startTokenId + input.quantity - 1,
             createdAt: block.timestamp
         });
 
         dexStartIds.push(startTokenId);
-        _safeMint(to, quantity);
+        _safeMint(to, input.quantity);
 
-        emit MintedNewDex(to, currentDexId, quantity);
+        emit MintedNewDex(to, currentDexId, input.quantity);
         currentDexId += 1;
     }
 
@@ -763,6 +794,35 @@ contract CodeGeass is Ownable, ERC721A, ReentrancyGuard {
         require(to != address(0), "Cannot transfer to zero address");
 
         transferFrom(from, to, tokenId);
+        collectibleInfoMap[tokenId].owner = to;
+        
+        emit TransferNFT(from, to, tokenId); // 触发事件
+    }
+
+    // 管理员上传藏品数据
+    function setCollectibleInfo(
+        uint256 tokenId,
+        string calldata hash,
+        string calldata code
+    ) external onlyOwner {
+        require(_exists(tokenId), "Token does not exist");
+
+        uint256 dexId = _findDexId(tokenId);
+        DexInfo memory dex = dexInfoMap[dexId];
+
+        collectibleInfoMap[tokenId] = CollectibleInfo({
+            name: dex.dexname,
+            hash: hash,
+            code: code,
+            dexId: dexId,
+            series: dex.series,
+            url: dex.baseURI,
+            author: dex.author,
+            publisher: dex.publisher,
+            copyright: dex.copyright,
+            platform: dex.platform,
+            owner: ownerOf(tokenId)
+        });
     }
 
     function isApprovedForAll(address ownerAddr, address operator) public view override returns (bool) {
@@ -773,7 +833,7 @@ contract CodeGeass is Ownable, ERC721A, ReentrancyGuard {
         return super.isApprovedForAll(ownerAddr, operator);
     }
 
-    function _findDexId(uint256 tokenId) internal view returns (uint256) {
+    function _findDexId(uint256 tokenId) public view returns (uint256) {
         uint256 left = 0;
         uint256 right = dexStartIds.length - 1;
 
