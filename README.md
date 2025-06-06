@@ -242,3 +242,34 @@ curl -X GET "http://<your-ip>:3000/api/generate-wallet" \
   "privateKey":"0xc980d22f4eff8d1762851f02a46dadf66b8cc511385fa47266c9d3ff5e114dcb"
 }
 ```
+
+#读取交易记录（topic0 是事件索引，返回的结果中 topic1 是发送地址， topic2 是接收地址， topic3 是 NFT编号，）
+```bash
+https://api.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=0x13d33BB6Ce1DE1d04C49F7F121532dC119041fe4&topic0=0xa64cdec004d2859ac7547f4ed3252f53d0fa0b8dcbcc93a47894eee072714b62&apikey=7SZ3BU8XRYQFA8C316TF5YVMB1HPKIEEGK
+```
+```bash
+{
+  "status": "1",
+  "message": "OK",
+  "result": [
+    {
+      "address": "0x13d33bb6ce1de1d04c49f7f121532dc119041fe4",
+      "topics": [
+        "0xa64cdec004d2859ac7547f4ed3252f53d0fa0b8dcbcc93a47894eee072714b62", // topic0
+        "0x000000000000000000000000902b6b2802cd8d26a9431f18ab4b3b92c8d9359c", // topic1
+        "0x000000000000000000000000af07dce2b9a6e056ab9c9e6b85723c064b7d7959", // topic2
+        "0x0000000000000000000000000000000000000000000000000000000000000000" // topic3
+      ],
+      "data": "0x",
+      "blockNumber": "0x45135ce",
+      "blockHash": "0x8669e28ba88704b068c131abfed6bbd0593445996ced8e6b5319cee8c8424cf7",
+      "timeStamp": "0x6842c908", // 转账时间戳
+      "gasPrice": "0x9a7d2a317",
+      "gasUsed": "0x1c22f",
+      "logIndex": "0x155",
+      "transactionHash": "0xcd069cbf2df36b266aeaa7ae308b3bba6114824866d4d64dacbeb3a72e5af5b2",
+      "transactionIndex": "0x43"
+    }
+  ]
+}
+```
