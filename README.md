@@ -189,7 +189,18 @@ curl -X GET "http://<your-ip>:3000/api/balance?address=0xabc123..." \
   "balance":"1"
 }
 ```
-8✅、/api/owner 查询某 tokenId 拥有者
+8✅、/api/lastDexCreatedBy 查询某商户地址最后铸造的图鉴编号，用得到的编号去获取图鉴信息，从而输出 NFT tokenId 数组
+```bash
+curl -X GET "http://<your-ip>:3000/api/lastDexCreatedBy?address=0xabc123..." \
+  -H "x-api-token: abc123456"
+```
+```bash
+{
+  "address":"0x4FDC3F3F097678bee02dCeA78c8841fb54355BCa",
+  "lastDexCreatedBy":"1"
+}
+```
+9✅、/api/owner 查询某 tokenId 拥有者
 ```bash
 curl -X GET "http://<your-ip>:3000/api/owner?tokenId=1234" \
   -H "x-api-token: abc123456"
@@ -200,7 +211,7 @@ curl -X GET "http://<your-ip>:3000/api/owner?tokenId=1234" \
   "owner":"0xaf07DCE2B9A6E056AB9C9E6B85723c064b7D7959"
 }
 ```
-9✅、/api/total-supply 查询当前已铸造的总 NFT 数量
+10✅、/api/total-supply 查询当前已铸造的总 NFT 数量
 ```bash
 curl -X GET "http://<your-ip>:3000/api/total-supply" \
   -H "x-api-token: abc123456"
@@ -210,7 +221,7 @@ curl -X GET "http://<your-ip>:3000/api/total-supply" \
   "totalSupply":"110"
 }
 ```
-10✅、/api/current-dex-id 查询图鉴编号计数器（用于查询合约中总共创建了多少个图鉴）
+11✅、/api/current-dex-id 查询图鉴编号计数器（用于查询合约中总共创建了多少个图鉴）
 ```bash
 curl -X GET "http://<your-ip>:3000/api/current-dex-id" \
   -H "x-api-token: abc123456"
@@ -220,7 +231,7 @@ curl -X GET "http://<your-ip>:3000/api/current-dex-id" \
   "currentDexId":"2"
 }
 ```
-11✅、/api/generate-wallet 生成新以太坊地址 & 私钥
+12✅、/api/generate-wallet 生成新以太坊地址 & 私钥
 ```bash
 curl -X GET "http://<your-ip>:3000/api/generate-wallet" \
   -H "x-api-token: abc123456"
