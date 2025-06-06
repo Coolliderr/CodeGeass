@@ -247,6 +247,7 @@ curl -X GET "http://<your-ip>:3000/api/generate-wallet" \
 ```bash
 https://api.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=0x13d33BB6Ce1DE1d04C49F7F121532dC119041fe4&topic0=0xa64cdec004d2859ac7547f4ed3252f53d0fa0b8dcbcc93a47894eee072714b62&apikey=7SZ3BU8XRYQFA8C316TF5YVMB1HPKIEEGK
 ```
+返回结果  
 ```bash
 {
   "status": "1",
@@ -272,4 +273,29 @@ https://api.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=l
     }
   ]
 }
+```
+解析代码1
+```bash
+//解析钱包地址如：0x000000000000000000000000902b6b2802cd8d26a9431f18ab4b3b92c8d9359c
+function parseAddressFromData(data) {
+    if (data.startsWith('0x')) data = data.slice(2);
+    const addressHex = data.slice(-40); // 取最后40位（20字节）
+    return '0x' + addressHex;
+}
+
+const raw = "0x000000000000000000000000902b6b2802cd8d26a9431f18ab4b3b92c8d9359c";
+const address = parseAddressFromData(raw);
+return { res:address }
+```
+解析代码2
+```bash
+//解析编号如：0x0000000000000000000000000000000000000000000000000000000000000001
+function parseUint256FromHex(hex) {
+    if (hex.startsWith('0x')) hex = hex.slice(2);
+    return BigInt('0x' + hex);
+}
+
+const raw = "0x0000000000000000000000000000000000000000000000000000000000000001";
+const value = parseUint256FromHex(raw);
+return { res:value.toString() }
 ```
