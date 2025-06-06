@@ -27,6 +27,7 @@ const abi = [
   "function dexInfoMap(uint256) view returns (uint256 dexId, string dexcode, string dexname, string series, string baseURI, address author, string copyright, string publisher, string platform, uint256 amount, uint256 startId, uint256 endId, uint256 createdAt)",
   "function _findDexId(uint256 tokenId) view returns (uint256)",
   "function balanceOf(address owner) view returns (uint256)",
+  "function lastDexCreatedBy(address owner) view returns (uint256)",
   "function ownerOf(uint256 tokenId) view returns (address)",
   "function totalSupply() view returns (uint256)",
   "function currentDexId() view returns (uint256)"
@@ -159,6 +160,19 @@ app.get('/api/balance', async (req, res) => {
 
     const balance = await contract.balanceOf(address);
     res.json({ address, balance: balance.toString() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 获取商户地址最后铸造的图鉴编号
+app.get('/api/lastDexCreatedBy', async (req, res) => {
+  try {
+    const address = req.query.address;
+    if (!address) return res.status(400).json({ error: 'address is required' });
+
+    const lastDexCreatedBy = await contract.lastDexCreatedBy(address);
+    res.json({ address, lastDexCreatedBy: lastDexCreatedBy.toString() });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
