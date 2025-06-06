@@ -243,7 +243,7 @@ curl -X GET "http://<your-ip>:3000/api/generate-wallet" \
 }
 ```
 
-#读取交易记录（topic0 是事件索引，返回的结果中 topic1 是发送地址， topic2 是接收地址， topic3 是 NFT编号，）
+# 读取交易记录（topic0 是事件索引，返回的结果中 topic1 是发送地址， topic2 是接收地址， topic3 是 NFT编号，）
 ```bash
 https://api.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=0x13d33BB6Ce1DE1d04C49F7F121532dC119041fe4&topic0=0xa64cdec004d2859ac7547f4ed3252f53d0fa0b8dcbcc93a47894eee072714b62&apikey=7SZ3BU8XRYQFA8C316TF5YVMB1HPKIEEGK
 ```
