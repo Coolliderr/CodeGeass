@@ -20,7 +20,7 @@ const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
 
 // 合约 ABI
 const abi = [
-  "function adminBatchMintAuto(address to, (string uri,string dexcode,string dexname,string series,string publisher,string copyright,string platform,uint256 quantity) input) external",
+  "function adminBatchMintAuto(address to, (string uri,string dexcode,string dexname,string series,string publisher,string copyright,string platform,uint256 quantity,string createdAt) input) external",
   "function setCollectibleInfo(uint256 tokenId, string hash, string code) external",
   "function adminTransfer(address from, address to, uint256 tokenId) external",
   "function collectibleInfoMap(uint256) view returns (string name, string hash, string code, uint256 dexId, string series, string url, address author, string publisher, string copyright, string platform, address owner)",
