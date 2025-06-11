@@ -78,7 +78,8 @@ curl -X POST http://<your-ip>:3000/api/mint \
     "publisher": "MyStudio",                  // 出版社/发行方
     "copyright": "© 2024 MyStudio",           // 著作权标记
     "platform": "MyPlatform",                 // 发售平台名称
-    "quantity": 5                             // 铸造数量
+    "quantity": 5,                             // 铸造数量
+    "createdAt": "2024-06-06 13:00"           // 图鉴创建时间
 }'
 ```
 ```bash
