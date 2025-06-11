@@ -38,13 +38,13 @@ const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, abi, wallet);
 // API：铸造 NFT
 app.post('/api/mint', async (req, res) => {
   try {
-    const { to, uri, dexcode, dexname, series, publisher, copyright, platform, quantity } = req.body;
+    const { to, uri, dexcode, dexname, series, publisher, copyright, platform, quantity, createdAt } = req.body;
 
-    if (!to || !uri || !dexcode || !dexname || !series || !publisher || !copyright || !platform || quantity === undefined || isNaN(quantity)) {
+    if (!to || !uri || !dexcode || !dexname || !series || !publisher || !copyright || !platform || !createdAt || quantity === undefined || isNaN(quantity)) {
       return res.status(400).json({ error: "Missing calldata" });
     }
 
-    const input = { uri, dexcode, dexname, series, publisher, copyright, platform, quantity };
+    const input = { uri, dexcode, dexname, series, publisher, copyright, platform, quantity, createdAt };
     const tx = await contract.adminBatchMintAuto(to, input);
     await tx.wait();
     res.json({ success: true, txHash: tx.hash });
